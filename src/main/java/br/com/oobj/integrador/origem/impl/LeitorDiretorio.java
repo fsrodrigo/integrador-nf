@@ -41,6 +41,7 @@ public class LeitorDiretorio implements Origem {
 				
 			} catch (IOException e) {
 				e.printStackTrace();
+				arquivoEncontrado.delete();
 			}
 //				finally {
 //				try {
