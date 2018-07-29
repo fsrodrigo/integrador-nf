@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="origem"
+		class="br.com.oobj.integrador.origem.impl.LeitorDiretorio">
+		<constructor-arg name="path" value="E:/entrada/xmls"></constructor-arg>
+	</bean>
+
+	<bean id="destino"
+		class="br.com.oobj.integrador.destino.impl.GravadorBancoDeDados">
+		<constructor-arg name="notaFiscalDAO" ref="notaFiscalDAO" />
+	</bean>
+	
+	<bean id="notaFiscalDAO" class="br.com.oobj.integrador.dao.impl.NotaFiscalJDBCDAO">
+	<constructor-arg name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver"></property>
+		<property name="url" value="jdbc:postgresql://localhost:5432/integrador"></property>
+		<property name="username" value="postgres"></property>
+		<property name="password" value="postgres"></property>
+	</bean>
+
+
+
+</beans>
