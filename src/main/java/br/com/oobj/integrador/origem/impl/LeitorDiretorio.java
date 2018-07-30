@@ -35,10 +35,13 @@ public class LeitorDiretorio implements Origem {
 			NotaFiscal nota = new NotaFiscal();
 			nota.setNomeArquivo(nomeArquivo);
 
-			try(FileInputStream fis = new FileInputStream(arquivoEncontrado);) {
-				
-				nota.setConteudoArquivo(IOUtils.toString(fis, "UTF-8"));
-				
+			try (FileInputStream fis = new FileInputStream(arquivoEncontrado);) {
+
+				String conteudoArquivo = IOUtils.toString(fis, "UTF-8");
+
+				nota.setConteudoArquivo(conteudoArquivo);
+				nota.setChaveDeAcesso(obterChaveAcesso(conteudoArquivo));
+
 			} catch (IOException e) {
 				e.printStackTrace();
 				arquivoEncontrado.delete();
@@ -52,7 +55,7 @@ public class LeitorDiretorio implements Origem {
 //			}
 			listaDeNotas.add(nota);
 
-			//Mover o arquivo para a pasta de processados...
+			// Mover o arquivo para a pasta de processados...
 			moverArquivoProcessado(arquivoEncontrado);
 
 		}
@@ -60,15 +63,35 @@ public class LeitorDiretorio implements Origem {
 		return listaDeNotas;
 	}
 
+	private String obterChaveAcesso(String conteudoArquivo) {
+		String chaveDeAcesso = null;
+		// <chNFe>52180707400611001229650110001263759328055070</chNFe>
+
+		int indexUm = conteudoArquivo.indexOf("<chNFe>");
+		int indexDois = conteudoArquivo.lastIndexOf("</chNFe>");
+		chaveDeAcesso = conteudoArquivo.substring(indexUm + 7, indexDois);
+
+		System.out.println("Chave de acesso do documento: " + chaveDeAcesso);
+
+		return chaveDeAcesso;
+	}
+
 	private void moverArquivoProcessado(File arquivoEncontrado) {
 		File parentFile = arquivoEncontrado.getParentFile().getParentFile();
-		File diretorioProcessados = new File(parentFile.getAbsolutePath(),"processados");
-		
-		if(!diretorioProcessados.exists()) {
+		File diretorioProcessados = new File(parentFile.getAbsolutePath(), "processados");
+		File arquivoProcessado = new File(diretorioProcessados.getAbsolutePath(), arquivoEncontrado.getName());
+
+		if (!diretorioProcessados.exists()) {
 			diretorioProcessados.mkdir();
 		}
 		try {
-			FileUtils.moveFileToDirectory(arquivoEncontrado, diretorioProcessados, true);
+			if (!arquivoProcessado.exists()) {
+				FileUtils.moveFileToDirectory(arquivoEncontrado, diretorioProcessados, true);
+			} else {
+//				System.out.println("Deletando o arquivo: " + arquivoEncontrado
+//						+ " O mesmo já existe no diretório de processados.");
+				arquivoEncontrado.delete();
+			}
 		} catch (IOException e) {
 			System.err.println("falha ao mover o arquivo para o diretório de processados..." + e.getMessage());
 		}

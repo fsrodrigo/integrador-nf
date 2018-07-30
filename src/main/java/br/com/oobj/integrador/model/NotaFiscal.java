@@ -5,18 +5,22 @@ public class NotaFiscal {
 	private Long id;
 	private String nomeArquivo;
 	private String conteudoArquivo;
+	private String chaveDeAcesso;
 	
 	
+	
+	@Override
+	public String toString() {
+		return "NotaFiscal [id=" + id + ", nomeArquivo=" + nomeArquivo + ", conteudoArquivo=" + conteudoArquivo
+				+ ", chaveDeAcesso=" + chaveDeAcesso + "]";
+	}
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Override
-	public String toString() {
-		return "NotaFiscal [id=" + id + ", nomeArquivo=" + nomeArquivo + ", conteudoArquivo=" + conteudoArquivo + "]";
-	}
+
 	public String getNomeArquivo() {
 		return nomeArquivo;
 	}
@@ -28,6 +32,12 @@ public class NotaFiscal {
 	}
 	public void setConteudoArquivo(String conteudoArquivo) {
 		this.conteudoArquivo = conteudoArquivo;
+	}
+	public String getChaveDeAcesso() {
+		return chaveDeAcesso;
+	}
+	public void setChaveDeAcesso(String chaveDeAcesso) {
+		this.chaveDeAcesso = chaveDeAcesso;
 	}
 
 

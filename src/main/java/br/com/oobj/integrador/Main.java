@@ -12,33 +12,32 @@ public class Main {
 
 	public static void main(String[] args) {
 		ApplicationContext contextoDoSpring = new ClassPathXmlApplicationContext("applicationContext.xml");
-		
+
 		Origem origemBean = contextoDoSpring.getBean("origem", Origem.class);
 		Destino destinoBean = contextoDoSpring.getBean("destino", Destino.class);
-		
+
 		IntegradorNotaFiscal integrador = new IntegradorNotaFiscal();
 		integrador.setOrigem(origemBean);
 		integrador.setDestino(destinoBean);
-		
-//		while(true) {
-//		integrador.integradorNotaFiscal();
-//		try {
-//			Thread.sleep(4000);
-//		} catch (Exception e) {
+
+//		while (true) {
+//			integrador.integradorNotaFiscal();
+//			try {
+//				Thread.sleep(4000);
+//			} catch (Exception e) {
 //
-//			e.printStackTrace();
+//				e.printStackTrace();
+//			}
 //		}
 //		
-//		}
-//		
-		NotaFiscalDAO notaFiscalDAO = contextoDoSpring.getBean("notaFiscalDAO", NotaFiscalDAO.class);
+// 		NotaFiscalDAO notaFiscalDAO = contextoDoSpring.getBean("notaFiscalDAO", NotaFiscalDAO.class);
 //		notaFiscalDAO.contarNotas();
 //		notaFiscalDAO.removerNota(2L);
 //		notaFiscalDAO.contarNotas();
-		notaFiscalDAO.buscarPeloId(89L);
+//		notaFiscalDAO.buscarPeloId(952L);
+
 		
-		
-		
+		integrador.integradorNotaFiscal();
 		
 	}
 }

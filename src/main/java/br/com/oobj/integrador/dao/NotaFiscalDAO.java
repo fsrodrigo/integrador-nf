@@ -6,28 +6,31 @@ import br.com.oobj.integrador.model.NotaFiscal;
 
 public interface NotaFiscalDAO {
 
-	//Inserir notas
+	// Inserir notas
 	void inserirNotaFiscal(NotaFiscal nota);
-	
-	//Contar notas
-		int contarNotas();
-	
-	//Listar todas as notas
-	
+
+	// Contar notas
+	int contarNotas();
+
+	// Listar todas as notas
+
 	List<NotaFiscal> listarTodas();
-	
-	//Remover uma nota
-	
+
+	// Remover uma nota
+
 	int removerNota(Long id);
-	
-	
-	//Atualizar notas
-	
+
+	// Atualizar notas
+
 	NotaFiscal atualizar(NotaFiscal notaFiscal);
-	
-	
-	//Buscar pelo ID
-	
+
+	// Buscar pelo ID
+
 	NotaFiscal buscarPeloId(Long id);
-	
+
+	// Busca retorna uma única nota, deve se passar a chave e o valor da query como
+	// parâmetros.
+
+	NotaFiscal buscaSimplesLivre(String chave, String valor);
+
 }

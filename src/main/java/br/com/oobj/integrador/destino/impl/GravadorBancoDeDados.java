@@ -25,7 +25,7 @@ public class GravadorBancoDeDados implements Destino {
 		System.out.println("Gravando registros no banco de dados...");
 
 		for (NotaFiscal nota : notas) {
-			System.out.println("Fazendo insert SQN no banco para a nota: " + nota.getNomeArquivo());
+			//System.out.println("Fazendo insert SQN no banco para a nota: " + nota.getNomeArquivo());
 			notaFiscalDAO.inserirNotaFiscal(nota);
 
 		}

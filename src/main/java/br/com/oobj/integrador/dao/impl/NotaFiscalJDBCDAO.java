@@ -25,11 +25,12 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 	public void inserirNotaFiscal(NotaFiscal nota) {
 
 		try (Connection con = dataSource.getConnection();
-				PreparedStatement ps = con
-						.prepareStatement("INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml) values(?,?)");) {
+				PreparedStatement ps = con.prepareStatement(
+						"INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml, chave_acesso) values(?,?,?)");) {
 
 			ps.setString(1, nota.getNomeArquivo());
 			ps.setString(2, nota.getConteudoArquivo());
+			ps.setString(3, nota.getChaveDeAcesso());
 
 			ps.execute();
 
@@ -75,12 +76,14 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 				Long id = resultSet.getLong("id");
 				String nomeArquivo = resultSet.getString("nome_arquivo");
 				String conteudoArquivo = resultSet.getString("conteudo_xml");
+				String chaveDeAcesso = resultSet.getString("chave_acesso");
 
 				NotaFiscal nf = new NotaFiscal();
 
 				nf.setId(id);
 				nf.setConteudoArquivo(conteudoArquivo);
 				nf.setNomeArquivo(nomeArquivo);
+				nf.setChaveDeAcesso(chaveDeAcesso);
 
 				todasNotas.add(nf);
 			}
@@ -128,24 +131,56 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 			psSelectById.setLong(1, id);
 			ResultSet resultSet = psSelectById.executeQuery();
 
-			if(resultSet.next()) {
+			if (resultSet.next()) {
 				notaFiscal = new NotaFiscal();
-				
+
 				notaFiscal.setId(resultSet.getLong("id"));
 				notaFiscal.setConteudoArquivo(resultSet.getString("conteudo_xml"));
 				notaFiscal.setNomeArquivo(resultSet.getString("nome_arquivo"));
-				
-				System.out.println("Foi encontrado 1 documento com o id: " + resultSet.getLong("id") );
-				System.out.println("Nome do arquivo: "+ notaFiscal.getNomeArquivo());
-				
-				System.out.println(notaFiscal);
+				notaFiscal.setChaveDeAcesso(resultSet.getString("chave_acesso"));
+
+				System.out.println("Foi encontrado 1 documento com o id: " + resultSet.getLong("id"));
+				System.out.println("Nome do arquivo: " + notaFiscal.getNomeArquivo());
+				System.out.println("Chave de Acesso: " + notaFiscal.getChaveDeAcesso());
+				System.out.println(notaFiscal.getConteudoArquivo());
 
 			}
 
 		} catch (Exception e) {
 			System.err.println("Erro: " + e.getMessage());
 		}
-		
+
+		return notaFiscal;
+	}
+
+	@Override
+	public NotaFiscal buscaSimplesLivre(String chave, String valor) {
+
+		NotaFiscal notaFiscal = null;
+		String sqlSelectLivre = "SELECT * FROM notas_fiscais WHERE " + chave + " = ?;";
+
+		try (Connection con = dataSource.getConnection();
+				PreparedStatement psSelectLivre = con.prepareStatement(sqlSelectLivre)) {
+
+			psSelectLivre.setString(1, valor);
+			
+			ResultSet resultSet = psSelectLivre.executeQuery();
+
+			if (resultSet.next()) {
+				notaFiscal = new NotaFiscal();
+
+				notaFiscal.setId(resultSet.getLong("id"));
+				notaFiscal.setConteudoArquivo(resultSet.getString("conteudo_xml"));
+				notaFiscal.setNomeArquivo(resultSet.getString("nome_arquivo"));
+				notaFiscal.setChaveDeAcesso(resultSet.getString("chave_acesso"));
+
+				System.out.println("Encontrado no banco o documento: " + resultSet.getString("chave_acesso"));
+
+			}
+
+		} catch (Exception e) {
+			System.err.println("Erro: " + e.getMessage());
+		}
 
 		return notaFiscal;
 	}
