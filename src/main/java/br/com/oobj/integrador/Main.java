@@ -20,24 +20,32 @@ public class Main {
 		integrador.setOrigem(origemBean);
 		integrador.setDestino(destinoBean);
 
-//		while (true) {
-//			integrador.integradorNotaFiscal();
-//			try {
-//				Thread.sleep(4000);
-//			} catch (Exception e) {
-//
-//				e.printStackTrace();
-//			}
-//		}
-//		
+		while (true) {
+			integrador.integradorNotaFiscal();
+			try {
+				Thread.sleep(4000);
+			} catch (Exception e) {
+	
+				e.printStackTrace();
+			}
+		}
+		
 // 		NotaFiscalDAO notaFiscalDAO = contextoDoSpring.getBean("notaFiscalDAO", NotaFiscalDAO.class);
 //		notaFiscalDAO.contarNotas();
-//		notaFiscalDAO.removerNota(2L);
+//		notaFiscalDAO.removerNota(1L);
 //		notaFiscalDAO.contarNotas();
-//		notaFiscalDAO.buscarPeloId(952L);
-
-		
-		integrador.integradorNotaFiscal();
+//		notaFiscalDAO.buscarPeloId(88L);	
+// 		NotaFiscal nf = notaFiscalDAO.buscarPeloId(2L);
+// 		nf.setNomeArquivo("funfou222222.xml");
+// 		nf.setId(3L);
+// 		notaFiscalDAO.atualizar(nf);
+// 		
+// 		notaFiscalDAO.buscarPeloId(3L);
+//		integrador.integradorNotaFiscal();
+ 		
+ 		
+// 		System.out.println("Quantidade de Registros no banco: "+ notaFiscalDAO.contarNotas());
+ 		
 		
 	}
 }

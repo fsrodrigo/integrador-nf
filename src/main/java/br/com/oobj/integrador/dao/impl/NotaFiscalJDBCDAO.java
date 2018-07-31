@@ -5,7 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.function.ToLongBiFunction;
+import java.util.function.ToLongFunction;
 
 import javax.sql.DataSource;
 
@@ -26,13 +29,14 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 
 		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(
-						"INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml, chave_acesso) values(?,?,?)");) {
+						"INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml, chave_acesso, data_hora_emissao) values(?,?,?,?)");) {
 
 			ps.setString(1, nota.getNomeArquivo());
 			ps.setString(2, nota.getConteudoArquivo());
 			ps.setString(3, nota.getChaveDeAcesso());
+			ps.setDate(4, (java.sql.Date) nota.getDataHoraEmissao());
 
-			ps.execute();
+			System.out.println("Linhas Inseridas: " + ps.executeUpdate());
 
 		} catch (Exception e) {
 			System.err.println("Erro: " + e.getMessage());
@@ -77,6 +81,7 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 				String nomeArquivo = resultSet.getString("nome_arquivo");
 				String conteudoArquivo = resultSet.getString("conteudo_xml");
 				String chaveDeAcesso = resultSet.getString("chave_acesso");
+				Date dataHoraEmissao = resultSet.getTimestamp("data_hora_emissao");
 
 				NotaFiscal nf = new NotaFiscal();
 
@@ -115,8 +120,30 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 
 	@Override
 	public NotaFiscal atualizar(NotaFiscal notaFiscal) {
-		// TODO Auto-generated method stub
-		return null;
+		NotaFiscal notaFiscalUpd = null;
+		String sqlUpdate = "UPDATE notas_fiscais set nome_arquivo=?, chave_acesso=?, conteudo_xml=?, data_hora_emissao=? WHERE id = ?;";
+
+		if (buscarPeloId(notaFiscal.getId()) != null) {
+
+			try (Connection con = dataSource.getConnection();
+					PreparedStatement psUpdate = con.prepareStatement(sqlUpdate)) {
+
+				psUpdate.setString(1, notaFiscal.getNomeArquivo());
+				psUpdate.setString(2, notaFiscal.getChaveDeAcesso());
+				psUpdate.setString(3, notaFiscal.getConteudoArquivo());
+				psUpdate.setDate(4, (java.sql.Date) notaFiscal.getDataHoraEmissao());
+				psUpdate.setLong(4, notaFiscal.getId());
+				
+				psUpdate.executeUpdate();
+			} catch (Exception e) {
+				System.err.println("Erro: " + e.getMessage());
+			}
+		} else {
+			System.out.println("A nota fiscal que tentou alterar não existe... ");
+			return notaFiscalUpd;
+		}
+		notaFiscalUpd = buscarPeloId(notaFiscal.getId());
+		return notaFiscalUpd;
 	}
 
 	@Override
@@ -138,11 +165,12 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 				notaFiscal.setConteudoArquivo(resultSet.getString("conteudo_xml"));
 				notaFiscal.setNomeArquivo(resultSet.getString("nome_arquivo"));
 				notaFiscal.setChaveDeAcesso(resultSet.getString("chave_acesso"));
+				notaFiscal.setDataHoraEmissao(resultSet.getTimestamp("data_hora_emissao"));
 
 				System.out.println("Foi encontrado 1 documento com o id: " + resultSet.getLong("id"));
 				System.out.println("Nome do arquivo: " + notaFiscal.getNomeArquivo());
 				System.out.println("Chave de Acesso: " + notaFiscal.getChaveDeAcesso());
-				System.out.println(notaFiscal.getConteudoArquivo());
+				// System.out.println(notaFiscal.getConteudoArquivo());
 
 			}
 
@@ -161,9 +189,11 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 
 		try (Connection con = dataSource.getConnection();
 				PreparedStatement psSelectLivre = con.prepareStatement(sqlSelectLivre)) {
+			if (!chave.equalsIgnoreCase("id")) {
+				psSelectLivre.setString(1, valor);
+			} else
+				psSelectLivre.setLong(1, Long.parseLong(valor));
 
-			psSelectLivre.setString(1, valor);
-			
 			ResultSet resultSet = psSelectLivre.executeQuery();
 
 			if (resultSet.next()) {
@@ -173,6 +203,7 @@ public class NotaFiscalJDBCDAO implements NotaFiscalDAO {
 				notaFiscal.setConteudoArquivo(resultSet.getString("conteudo_xml"));
 				notaFiscal.setNomeArquivo(resultSet.getString("nome_arquivo"));
 				notaFiscal.setChaveDeAcesso(resultSet.getString("chave_acesso"));
+				notaFiscal.setDataHoraEmissao(resultSet.getTimestamp("data_hora_emissao"));
 
 				System.out.println("Encontrado no banco o documento: " + resultSet.getString("chave_acesso"));
 

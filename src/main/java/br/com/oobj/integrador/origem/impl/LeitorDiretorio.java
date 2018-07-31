@@ -11,9 +11,11 @@ import org.apache.commons.io.IOUtils;
 
 import br.com.oobj.integrador.model.NotaFiscal;
 import br.com.oobj.integrador.origem.Origem;
+import br.com.oobj.integrador.utils.Utilitarios;
 
 public class LeitorDiretorio implements Origem {
 
+	private Utilitarios utils = new Utilitarios();
 	private String path;
 
 	public LeitorDiretorio(String path) {
@@ -56,7 +58,7 @@ public class LeitorDiretorio implements Origem {
 			listaDeNotas.add(nota);
 
 			// Mover o arquivo para a pasta de processados...
-			moverArquivoProcessado(arquivoEncontrado);
+			utils.moverArquivoProcessado(arquivoEncontrado);
 
 		}
 
@@ -75,26 +77,4 @@ public class LeitorDiretorio implements Origem {
 
 		return chaveDeAcesso;
 	}
-
-	private void moverArquivoProcessado(File arquivoEncontrado) {
-		File parentFile = arquivoEncontrado.getParentFile().getParentFile();
-		File diretorioProcessados = new File(parentFile.getAbsolutePath(), "processados");
-		File arquivoProcessado = new File(diretorioProcessados.getAbsolutePath(), arquivoEncontrado.getName());
-
-		if (!diretorioProcessados.exists()) {
-			diretorioProcessados.mkdir();
-		}
-		try {
-			if (!arquivoProcessado.exists()) {
-				FileUtils.moveFileToDirectory(arquivoEncontrado, diretorioProcessados, true);
-			} else {
-//				System.out.println("Deletando o arquivo: " + arquivoEncontrado
-//						+ " O mesmo já existe no diretório de processados.");
-				arquivoEncontrado.delete();
-			}
-		} catch (IOException e) {
-			System.err.println("falha ao mover o arquivo para o diretório de processados..." + e.getMessage());
-		}
-	}
-
 }

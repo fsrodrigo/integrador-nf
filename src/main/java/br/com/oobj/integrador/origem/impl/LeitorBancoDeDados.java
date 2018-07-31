@@ -14,11 +14,13 @@ import org.apache.commons.io.IOUtils;
 import br.com.oobj.integrador.dao.NotaFiscalDAO;
 import br.com.oobj.integrador.model.NotaFiscal;
 import br.com.oobj.integrador.origem.Origem;
+import br.com.oobj.integrador.utils.Utilitarios;
 
 public class LeitorBancoDeDados implements Origem {
 
 	private NotaFiscalDAO notaFiscalDAO;
 	private String pathLeitura;
+	private Utilitarios utils = new Utilitarios();
 
 	public LeitorBancoDeDados(NotaFiscalDAO notaFiscalDAO, String pathLeitura) {
 		this.notaFiscalDAO = notaFiscalDAO;
@@ -28,7 +30,7 @@ public class LeitorBancoDeDados implements Origem {
 	public List<NotaFiscal> obterNotas() {
 		System.out.println("Lendo diretório de Entrada: " + pathLeitura);
 
-		List<NotaFiscal> listaDeNotas =  new ArrayList<>();
+		List<NotaFiscal> listaDeNotas = new ArrayList<>();
 		File diretorio = new File(pathLeitura);
 		String chave = null;
 		String valor = null;
@@ -37,7 +39,7 @@ public class LeitorBancoDeDados implements Origem {
 			String nomeArquivo = arquivoEncontrado.getName();
 			System.out.println("Arquivo encontrado: " + nomeArquivo);
 
-			try (FileReader fis = new FileReader(arquivoEncontrado);) {
+			try (FileReader fis = new FileReader(arquivoEncontrado)) {
 				BufferedReader conteudoArquivo = new BufferedReader(fis);
 
 				String linha = conteudoArquivo.readLine();
@@ -54,28 +56,9 @@ public class LeitorBancoDeDados implements Origem {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			moverArquivoProcessado(arquivoEncontrado);
+			utils.moverArquivoProcessado(arquivoEncontrado);
 		}
-		
+
 		return listaDeNotas;
-	}
-
-	private void moverArquivoProcessado(File arquivoEncontrado) {
-		File parentFile = arquivoEncontrado.getParentFile().getParentFile();
-		File diretorioProcessados = new File(parentFile.getAbsolutePath(), "processados");
-		File arquivoProcessado = new File(diretorioProcessados.getAbsolutePath(), arquivoEncontrado.getName());
-
-		if (!diretorioProcessados.exists()) {
-			diretorioProcessados.mkdir();
-		}
-		try {
-			if (!arquivoProcessado.exists()) {
-				FileUtils.moveFileToDirectory(arquivoEncontrado, diretorioProcessados, true);
-			} else {
-				arquivoEncontrado.delete();
-			}
-		} catch (IOException e) {
-			System.err.println("falha ao mover o arquivo para o diretório de processados..." + e.getMessage());
-		}
 	}
 }

@@ -4,34 +4,34 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Obter XML Proc do diretório -->
-	<!-- <bean id="origem" -->
-	<!-- class="br.com.oobj.integrador.origem.impl.LeitorDiretorio"> -->
-	<!-- <constructor-arg name="path" value="E:/entrada/xmls"></constructor-arg> -->
-	<!-- </bean> -->
-
-	<!-- Obter XML Proc do Banco de Dados -->
 	<bean id="origem"
-		class="br.com.oobj.integrador.origem.impl.LeitorBancoDeDados">
-		<constructor-arg name="notaFiscalDAO" ref="notaFiscalDAO" />
-		<constructor-arg name="pathLeitura" value="E:/entrada/leitura"></constructor-arg>
+	class="br.com.oobj.integrador.origem.impl.LeitorDiretorio">
+	<constructor-arg name="path" value="E:/entrada/xmls"></constructor-arg>
 	</bean>
 
+	<!-- Obter XML Proc do Banco de Dados -->
+<!-- 	<bean id="origem" -->
+<!-- 		class="br.com.oobj.integrador.origem.impl.LeitorBancoDeDados"> -->
+<!-- 		<constructor-arg name="notaFiscalDAO" ref="notaFiscalDAO" /> -->
+<!-- 		<constructor-arg name="pathLeitura" value="E:/entrada/leitura"></constructor-arg> -->
+<!-- 	</bean> -->
+
 	<!-- Gravador Banco de dados -->
-	<!-- <bean id="destino" -->
-	<!-- class="br.com.oobj.integrador.destino.impl.GravadorBancoDeDados"> -->
-	<!-- <constructor-arg name="notaFiscalDAO" -->
-	<!-- ref="notaFiscalDAO" /> -->
-	<!-- </bean> -->
+	<bean id="destino"
+	class="br.com.oobj.integrador.destino.impl.GravadorBancoDeDados">
+	<constructor-arg name="notaFiscalDAO"
+	ref="notaFiscalDAO" />
+	</bean>
 
 
 	<!-- Gravador Diretório -->
-	<bean id="destino"
-		class="br.com.oobj.integrador.destino.impl.GravadorDiretorio">
-		<constructor-arg name="path" value="E:/saida/xmls"></constructor-arg>
-	</bean>
+<!-- 	<bean id="destino" -->
+<!-- 		class="br.com.oobj.integrador.destino.impl.GravadorDiretorio"> -->
+<!-- 		<constructor-arg name="path" value="E:/saida/xmls"></constructor-arg> -->
+<!-- 	</bean> -->
 
 	<bean id="notaFiscalDAO"
-		class="br.com.oobj.integrador.dao.impl.NotaFiscalJDBCDAO">
+		class="br.com.oobj.integrador.dao.impl.NotaFiscalSpringJDBCDAO">
 		<constructor-arg name="dataSource" ref="dataSource" />
 	</bean>
 
