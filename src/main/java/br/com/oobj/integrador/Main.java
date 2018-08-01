@@ -20,16 +20,16 @@ public class Main {
 		integrador.setOrigem(origemBean);
 		integrador.setDestino(destinoBean);
 
-		while (true) {
-			integrador.integradorNotaFiscal();
-			try {
-				Thread.sleep(4000);
-			} catch (Exception e) {
-	
-				e.printStackTrace();
-			}
-		}
-		
+//		while (true) {
+//			integrador.integradorNotaFiscal();
+//			try {
+//				Thread.sleep(4000);
+//			} catch (Exception e) {
+//	
+//				e.printStackTrace();
+//			}
+//		}
+		integrador.integradorNotaFiscal();
 // 		NotaFiscalDAO notaFiscalDAO = contextoDoSpring.getBean("notaFiscalDAO", NotaFiscalDAO.class);
 //		notaFiscalDAO.contarNotas();
 //		notaFiscalDAO.removerNota(1L);
