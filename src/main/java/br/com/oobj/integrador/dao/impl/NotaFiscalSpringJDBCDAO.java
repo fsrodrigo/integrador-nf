@@ -1,8 +1,10 @@
 package br.com.oobj.integrador.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
+import javax.swing.tree.RowMapper;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,10 +23,10 @@ public class NotaFiscalSpringJDBCDAO implements NotaFiscalDAO {
 	public void inserirNotaFiscal(NotaFiscal nota) {
 		String sqlInsert = "INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml, chave_acesso, data_hora_emissao) values(?,?,?,?)";
 
-		int linhasAfetadas = jdbcTemplate.update(sqlInsert, nota.getNomeArquivo(), nota.getConteudoArquivo(), nota.getChaveDeAcesso(),
-				nota.getDataHoraEmissao());
-		
-		System.out.println("Linhas inseridas: "+ linhasAfetadas);
+		int linhasAfetadas = jdbcTemplate.update(sqlInsert, nota.getNomeArquivo(), nota.getConteudoArquivo(),
+				nota.getChaveDeAcesso(), nota.getDataHoraEmissao());
+
+		System.out.println("Linhas inseridas: " + linhasAfetadas);
 
 	}
 
@@ -36,26 +38,66 @@ public class NotaFiscalSpringJDBCDAO implements NotaFiscalDAO {
 
 	@Override
 	public List<NotaFiscal> listarTodas() {
-		// TODO Auto-generated method stub
-		return null;
+
+		String sqlSelectAll = "SELECT * FROM notas_fiscais;";
+		List<NotaFiscal> nf = jdbcTemplate.query(sqlSelectAll, new NotaFiscalRowMapper());
+
+		System.out.println(nf);
+
+		return nf;
 	}
 
 	@Override
 	public int removerNota(Long id) {
-		// TODO Auto-generated method stub
+
+		if (buscarPeloId(id) != null) {
+			String sqlDelete = "DELETE FROM notas_fiscais WHERE id = ?;";
+			int linhasAfetadas = jdbcTemplate.update(sqlDelete, id);
+
+			if (linhasAfetadas == 1)
+				System.out.println("Registro excluído com sucesso");
+			else
+				System.out.println("ops.. Algo deu errado.");
+
+			return linhasAfetadas;
+		} else
+			System.out.println("Documento com id: " + id + " não existe...");
 		return 0;
+
 	}
 
 	@Override
 	public NotaFiscal atualizar(NotaFiscal notaFiscal) {
-		// TODO Auto-generated method stub
+		String sqlUpdate = "UPDATE notas_fiscais SET nome_arquivo = ?, conteudo_xml = ?, chave_acesso = ?, data_hora_emissao = ? "
+				+ "where id = ?;";
+
+		if (buscarPeloId(notaFiscal.getId()) != null) {
+
+			int linhasAtualizadas = jdbcTemplate.update(sqlUpdate, notaFiscal.getNomeArquivo(),
+					notaFiscal.getConteudoArquivo(), notaFiscal.getChaveDeAcesso(), notaFiscal.getDataHoraEmissao(),
+					notaFiscal.getId());
+			
+			System.out.println("Linhas atualizadas: "+linhasAtualizadas);
+			
+			if(linhasAtualizadas==1) {
+				return buscarPeloId(notaFiscal.getId());
+			}
+		}
+		
+
 		return null;
 	}
 
 	@Override
 	public NotaFiscal buscarPeloId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		String sqlSelectAll = "SELECT * FROM notas_fiscais where id = ?;";
+		NotaFiscal nf = new NotaFiscal();
+		try {
+			nf = jdbcTemplate.queryForObject(sqlSelectAll, new Object[] { id }, new NotaFiscalRowMapper());
+		} catch (RuntimeException e) {
+			System.out.println("\"Não existe registro com o ID: " + id);
+		}
+		return nf;
 	}
 
 	@Override
