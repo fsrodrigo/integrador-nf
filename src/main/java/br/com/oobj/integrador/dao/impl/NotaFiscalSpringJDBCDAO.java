@@ -1,30 +1,32 @@
 package br.com.oobj.integrador.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
-import javax.swing.tree.RowMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import br.com.oobj.integrador.dao.NotaFiscalDAO;
 import br.com.oobj.integrador.model.NotaFiscal;
 
+@Repository
 public class NotaFiscalSpringJDBCDAO implements NotaFiscalDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
 	public NotaFiscalSpringJDBCDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
 	@Override
 	public void inserirNotaFiscal(NotaFiscal nota) {
-		String sqlInsert = "INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml, chave_acesso, data_hora_emissao) values(?,?,?,?)";
+		String sqlInsert = "INSERT INTO notas_fiscais (nome_arquivo, conteudo_xml, chave_acesso, data_hora_emissao, numero_documento) values(?,?,?,?,?)";
 
 		int linhasAfetadas = jdbcTemplate.update(sqlInsert, nota.getNomeArquivo(), nota.getConteudoArquivo(),
-				nota.getChaveDeAcesso(), nota.getDataHoraEmissao());
+				nota.getChaveDeAcesso(), nota.getDataHoraEmissao(), nota.getNumeroDocumento());
 
 		System.out.println("Linhas inseridas: " + linhasAfetadas);
 
@@ -76,14 +78,13 @@ public class NotaFiscalSpringJDBCDAO implements NotaFiscalDAO {
 			int linhasAtualizadas = jdbcTemplate.update(sqlUpdate, notaFiscal.getNomeArquivo(),
 					notaFiscal.getConteudoArquivo(), notaFiscal.getChaveDeAcesso(), notaFiscal.getDataHoraEmissao(),
 					notaFiscal.getId());
-			
-			System.out.println("Linhas atualizadas: "+linhasAtualizadas);
-			
-			if(linhasAtualizadas==1) {
+
+			System.out.println("Linhas atualizadas: " + linhasAtualizadas);
+
+			if (linhasAtualizadas == 1) {
 				return buscarPeloId(notaFiscal.getId());
 			}
 		}
-		
 
 		return null;
 	}

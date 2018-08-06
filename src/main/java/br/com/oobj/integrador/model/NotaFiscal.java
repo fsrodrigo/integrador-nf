@@ -9,11 +9,15 @@ public class NotaFiscal {
 	private String conteudoArquivo;
 	private String chaveDeAcesso;
 	private Date dataHoraEmissao;
+	private String numeroDocumento;
+
+
 
 	@Override
 	public String toString() {
-		return "NotaFiscal: \nid=" + id + ",  \nnomeArquivo=" + nomeArquivo + ",   \nchaveDeAcesso=" + chaveDeAcesso
-				+ ",  \ndataHoraEmissao=" + dataHoraEmissao ;
+		return "NotaFiscal [id=" + id + ", nomeArquivo=" + nomeArquivo + ", conteudoArquivo=" + conteudoArquivo
+				+ ", chaveDeAcesso=" + chaveDeAcesso + ", dataHoraEmissao=" + dataHoraEmissao + ", numeroDocumento="
+				+ numeroDocumento + "]";
 	}
 
 	public Long getId() {
@@ -55,5 +59,14 @@ public class NotaFiscal {
 	public void setDataHoraEmissao(Date dataHoraEmissao) {
 		this.dataHoraEmissao = dataHoraEmissao;
 	}
+
+	public String getNumeroDocumento() {
+		return numeroDocumento;
+	}
+
+	public void setNumeroDocumento(String numeroDocumento) {
+		this.numeroDocumento = numeroDocumento;
+	}
+	
 
 }

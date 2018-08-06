@@ -1,21 +1,20 @@
 package br.com.oobj.integrador.destino.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.List;
 
-import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.oobj.integrador.dao.NotaFiscalDAO;
-import br.com.oobj.integrador.dao.impl.NotaFiscalJDBCDAO;
 import br.com.oobj.integrador.destino.Destino;
 import br.com.oobj.integrador.model.NotaFiscal;
-import br.com.oobj.integrador.origem.Origem;
 
+@Service
 public class GravadorBancoDeDados implements Destino {
 
 	private NotaFiscalDAO notaFiscalDAO;
 
+	@Autowired
 	public GravadorBancoDeDados(NotaFiscalDAO notaFiscalDAO) {
 		this.notaFiscalDAO = notaFiscalDAO;
 	}

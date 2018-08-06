@@ -1,7 +1,5 @@
 package br.com.oobj.integrador;
 
-import java.util.List;
-
 import br.com.oobj.integrador.destino.Destino;
 import br.com.oobj.integrador.origem.Origem;
 
